@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Book Library</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        margin: 2rem;
+      }
+      h1 {
+        color: #333;
+      }
+      table {
+        border-collapse: collapse;
+        width: 100%;
+        margin-bottom: 2rem;
+      }
+      th,
+      td {
+        border: 1px solid #ccc;
+        padding: 8px;
+        text-align: left;
+      }
+      th {
+        background: #f4f4f4;
+      }
+      form {
+        margin-bottom: 2rem;
+      }
+      input,
+      select {
+        margin: 0 0.5rem 0.5rem 0;
+        padding: 0.3rem;
+      }
+      button {
+        padding: 0.3rem 0.7rem;
+      }
+      .actions button {
+        margin-right: 0.5rem;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Book Library</h1>
+    <form id="book-form">
+      <input type="hidden" id="book-id" />
+      <input type="text" id="title" placeholder="Title" required />
+      <input type="text" id="author" placeholder="Author" required />
+      <input type="text" id="genre" placeholder="Genre" required />
+      <input type="number" id="year" placeholder="Year" required />
+      <button type="submit">Add Book</button>
+      <button type="button" id="cancel-edit" style="display: none">
+        Cancel
+      </button>
+    </form>
+    <table id="books-table">
+      <thead>
+        <tr>
+          <th>Title</th>
+          <th>Author</th>
+          <th>Genre</th>
+          <th>Year</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody></tbody>
+    </table>
+    <script>
+      const api = '/api/books';
+      const form = document.getElementById('book-form');
+      const tableBody = document.querySelector('#books-table tbody');
+      const cancelEditBtn = document.getElementById('cancel-edit');
+      let editing = false;
+
+      function fetchBooks() {
+        fetch(api)
+          .then((res) => res.json())
+          .then((books) => {
+            tableBody.innerHTML = '';
+            books.forEach((book) => {
+              const tr = document.createElement('tr');
+              tr.innerHTML = `
+              <td>${book.title}</td>
+              <td>${book.author}</td>
+              <td>${book.genre}</td>
+              <td>${book.year}</td>
+              <td class="actions">
+                <button onclick="editBook(${book.id})">Edit</button>
+                <button onclick="deleteBook(${book.id})">Delete</button>
+              </td>
+            `;
+              tableBody.appendChild(tr);
+            });
+          });
+      }
+
+      window.editBook = function (id) {
+        fetch(`${api}/${id}`)
+          .then((res) => res.json())
+          .then((book) => {
+            document.getElementById('book-id').value = book.id;
+            document.getElementById('title').value = book.title;
+            document.getElementById('author').value = book.author;
+            document.getElementById('genre').value = book.genre;
+            document.getElementById('year').value = book.year;
+            editing = true;
+            form.querySelector('button[type="submit"]').textContent =
+              'Update Book';
+            cancelEditBtn.style.display = '';
+          });
+      };
+
+      window.deleteBook = function (id) {
+        if (!confirm('Delete this book?')) return;
+        fetch(`${api}/${id}`, { method: 'DELETE' }).then(() => fetchBooks());
+      };
+
+      form.onsubmit = function (e) {
+        e.preventDefault();
+        const id = document.getElementById('book-id').value;
+        const book = {
+          title: document.getElementById('title').value,
+          author: document.getElementById('author').value,
+          genre: document.getElementById('genre').value,
+          year: parseInt(document.getElementById('year').value),
+        };
+        if (editing) {
+          fetch(`${api}/${id}`, {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(book),
+          }).then(() => {
+            editing = false;
+            form.reset();
+            form.querySelector('button[type="submit"]').textContent =
+              'Add Book';
+            cancelEditBtn.style.display = 'none';
+            fetchBooks();
+          });
+        } else {
+          fetch(api, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(book),
+          }).then(() => {
+            form.reset();
+            fetchBooks();
+          });
+        }
+      };
+
+      cancelEditBtn.onclick = function () {
+        editing = false;
+        form.reset();
+        form.querySelector('button[type="submit"]').textContent = 'Add Book';
+        cancelEditBtn.style.display = 'none';
+      };
+
+      fetchBooks();
+    </script>
+  </body>
+</html>
