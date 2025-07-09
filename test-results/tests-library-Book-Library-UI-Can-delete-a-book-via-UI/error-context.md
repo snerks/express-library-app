@@ -1,0 +1,75 @@
+# Page snapshot
+
+```yaml
+- heading "Book Library" [level=1]
+- textbox "Title"
+- textbox "Author"
+- textbox "Genre"
+- spinbutton
+- button "Add Book"
+- table:
+  - rowgroup:
+    - row "Title Author Genre Year Actions":
+      - cell "Title"
+      - cell "Author"
+      - cell "Genre"
+      - cell "Year"
+      - cell "Actions"
+  - rowgroup:
+    - row "To Kill a Mockingbird Harper Lee Fiction 1960 Edit Delete":
+      - cell "To Kill a Mockingbird"
+      - cell "Harper Lee"
+      - cell "Fiction"
+      - cell "1960"
+      - cell "Edit Delete":
+        - button "Edit"
+        - button "Delete"
+    - row "1984 George Orwell Dystopian 1949 Edit Delete":
+      - cell "1984"
+      - cell "George Orwell"
+      - cell "Dystopian"
+      - cell "1949"
+      - cell "Edit Delete":
+        - button "Edit"
+        - button "Delete"
+    - row "The Great Gatsby F. Scott Fitzgerald Classic 1925 Edit Delete":
+      - cell "The Great Gatsby"
+      - cell "F. Scott Fitzgerald"
+      - cell "Classic"
+      - cell "1925"
+      - cell "Edit Delete":
+        - button "Edit"
+        - button "Delete"
+    - row "Test Book Test Author Test Genre 2025 Edit Delete":
+      - cell "Test Book"
+      - cell "Test Author"
+      - cell "Test Genre"
+      - cell "2025"
+      - cell "Edit Delete":
+        - button "Edit"
+        - button "Delete"
+    - row "Updated B C 2021 Edit Delete":
+      - cell "Updated"
+      - cell "B"
+      - cell "C"
+      - cell "2021"
+      - cell "Edit Delete":
+        - button "Edit"
+        - button "Delete"
+    - row "UI Book 1752076673998 UI Author UI Genre 2025 Edit Delete":
+      - cell "UI Book 1752076673998"
+      - cell "UI Author"
+      - cell "UI Genre"
+      - cell "2025"
+      - cell "Edit Delete":
+        - button "Edit"
+        - button "Delete"
+    - row "Delete Me 1752076674248 Delete Author Delete Genre 2025 Edit Delete":
+      - cell "Delete Me 1752076674248"
+      - cell "Delete Author"
+      - cell "Delete Genre"
+      - cell "2025"
+      - cell "Edit Delete":
+        - button "Edit"
+        - button "Delete"
+```
